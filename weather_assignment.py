@@ -23,19 +23,29 @@ for precipitation in precipitation_data:
 
 total_monthly_precipitation = []
 
-# Calculating total monthly precipitation for Seattle
-for month in range(1,13):
-    monthly_precipitation = 0
-    for precipitation in precipitation_data:
-        if precipitation['station'] == 'GHCND:US1WAKG0038':
+print(station_data)
+
+# Calculating total monthly precipitation for each station
+for station in station_data:
+    station_data[station]['total_monthly_precipitation'] = []
+    for month in range(1,13):
+        monthly_precipitation = 0
+        for precipitation in precipitation_data:
+            if station_data[station]['Station'] == precipitation['station']:
                 if precipitation['date'][1] == month:
                     monthly_precipitation += precipitation['value']
-    total_monthly_precipitation.append(monthly_precipitation)
-
-print(total_monthly_precipitation)
-station_data['Seattle']['total_monthly_precipitation'] = total_monthly_precipitation
+        station_data[station]['total_monthly_precipitation'].append(monthly_precipitation)
 
 print(station_data)
+
+#total_yearly_precipitation = sum(total_monthly_precipitation)
+#print(total_yearly_precipitation)
+
+#relative_monthly_precipitation = []
+#for value in total_monthly_precipitation:
+#    relative_monthly_precipitation.append(value/total_yearly_precipitation)
+
+#print(relative_monthly_precipitation)
 
 with open('results.json', 'w', encoding='utf-8') as file:
    json.dump(station_data, file, indent=4)
