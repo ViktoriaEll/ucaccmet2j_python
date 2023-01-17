@@ -1,5 +1,5 @@
 # WEATHER ASSIGNMENT
-# Q 1.1
+
 import json
 with open('precipitation.json', encoding='utf-8') as file:
   precipitation_data = json.load(file)
@@ -22,8 +22,7 @@ for precipitation in precipitation_data:
         precipitation['date'][i] = int(precipitation['date'][i])
 
 total_monthly_precipitation = []
-
-print(station_data)
+total_precipitation = 0
 
 # Calculating total monthly precipitation for each station
 for station in station_data:
@@ -35,19 +34,24 @@ for station in station_data:
                 if precipitation['date'][1] == month:
                     monthly_precipitation += precipitation['value']
         station_data[station]['total_monthly_precipitation'].append(monthly_precipitation)
+        
+    # Calculating yearly precipitation
+    total_yearly_precipitation = sum(station_data[station]['total_monthly_precipitation'])
+    station_data[station]['total_yearly_precipitation'] = total_yearly_precipitation
+    
+    # Calculating relative monthly
+    station_data[station]['relative_monthly_precipitation'] = []    
+    for value in station_data[station]['total_monthly_precipitation']:
+        station_data[station]['relative_monthly_precipitation'].append(value/(station_data[station]['total_yearly_precipitation']))
+
+    # total precipitation
+    total_precipitation += station_data[station]['total_yearly_precipitation']
+
+# relative yearly precipitation for each station
+for station in station_data:
+    station_data[station]['relative_yearly_precipitation'] = ((station_data[station]['total_yearly_precipitation'])/total_precipitation)
 
 print(station_data)
 
-#total_yearly_precipitation = sum(total_monthly_precipitation)
-#print(total_yearly_precipitation)
-
-#relative_monthly_precipitation = []
-#for value in total_monthly_precipitation:
-#    relative_monthly_precipitation.append(value/total_yearly_precipitation)
-
-#print(relative_monthly_precipitation)
-
 with open('results.json', 'w', encoding='utf-8') as file:
    json.dump(station_data, file, indent=4)
-
-# results.json also includes some information for the other stations which in order to make the graph using plot_results.py has to be removed
